@@ -1,23 +1,27 @@
 package config
 
+import "github.com/spf13/viper"
+
 type Config struct {
-	DBUri    string `mapstructure:"MONGODB_LOCAL_URI"`
+	MongoUri string `mapstructure:"MONGODB_LOCAL_URI"`
 	RedisUri string `mapstructure:"REDIS_URL"`
 	Port     string `mapstructure:"PORT"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
+func LoadConfig(path string) (Config, error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigType("env")
 	viper.SetConfigName("app")
 
 	viper.AutomaticEnv()
 
-	err = viper.ReadInConfig()
+	err := viper.ReadInConfig()
 	if err != nil {
-		return
+		return Config{}, err
 	}
 
+	var config Config
 	err = viper.Unmarshal(&config)
-	return
+
+	return config, err
 }
