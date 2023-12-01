@@ -37,7 +37,8 @@ func main() {
 		log.Fatal("Could not load config", err)
 	}
 
-	defer mongoclient.Disconnect(ctx)
+	defer mongoclient.Disconnect(context.TODO())
+	defer redisclient.Close()
 
 	value, err := redisclient.Get("test").Result()
 
